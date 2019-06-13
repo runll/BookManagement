@@ -16,6 +16,7 @@
 </style>
 </head>
 <body>
+${user.username}
 <div class="box">
 	<div class="success">
 		${success}将在<span id="mes">5</span>秒后跳转到登录界面<br>

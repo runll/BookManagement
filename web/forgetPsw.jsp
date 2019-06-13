@@ -30,10 +30,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			找回密码
 		</div>
 		<div class="text2">
-			这个页面即将被废弃，除非/forgetPsw下的user可以保留到/findpassword
+			Todo:/forgetPsw下的user可以保留到/findpassword
 		</div>
 		<div class="form">
-			<form action="${pageContext.request.contextPath }/findpassword.jsp" method="post">
+			<form action="${pageContext.request.contextPath }/forgetPsw" method="post">
 				<div class="input">
 					<input  type="student_id" name="student_id" placeholder="student_id" required />
 				</div>

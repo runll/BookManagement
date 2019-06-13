@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="th" uri="http://www.springframework.org/tags/form" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -33,12 +34,13 @@
         请输入新密码
     </div>
     <div class="form">
-        <form action="${pageContext.request.contextPath }/success" method="post">
+        <form action="${pageContext.request.contextPath }/findpassword" method="post">
+
             <div class="input">
-                <input  type="student_id" name="student_id" placeholder="student_id" required />
+                <input  type="text" value="${checked.student_id}" id="student_id"  />
             </div>
             <div class="input">
-                <input  type="username" name="username" placeholder="username" required />
+                <input  type="text" value="${checked.username}" id="username"  />
             </div>
             <div class="input">
                 <input  type="password" name="password" placeholder="password" required />
@@ -46,6 +48,10 @@
             <div class="input">
                 <input type="submit" name="submit" value="提交" />
             </div>
+
+            <%
+                out.print("Hello form!"+"${checked}");
+            %>
         </form>
     </div>
 </div>

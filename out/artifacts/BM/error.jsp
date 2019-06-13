@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>错误</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/css/forgetPsw.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath }/static/css/forgetPsw.css"/>
 <style type=text/css>
 	.box .error {
 		text-align: center;

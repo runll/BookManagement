@@ -8,13 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -33,11 +29,7 @@ public class UsersController {
     @Autowired
     public IUsersService usersService;
 
-    public HttpServletRequest request;
-    public HttpServletResponse response;
-    public HttpSession session;
-    public  RedirectAttributes redirectAttributes;
-    public ServletContext application;
+
 
     /**
      * 选择账号
@@ -46,7 +38,7 @@ public class UsersController {
      * @return
      */
     @RequestMapping("/selectList")
-    public String selectAll(IUsers users) {
+    public String selectAll(HttpServletRequest request,IUsers users) {
         boolean dron = usersService.selectOne(users);
         if (dron) {
             request.setAttribute("ulist", usersService.selectAll());
@@ -102,47 +94,54 @@ public class UsersController {
      * 验证账号
      *
      * @param user
-     * @param map
+     * @param 
      * @return
      */
 
-    @RequestMapping(value = "/forgetPsw")
-    public String forgetPassword(@Valid IUsers user, Map<String, Object> map) {
-        System.out.println("@valid"+user.toString());
+    @RequestMapping(value = "/forgetPsw",method = RequestMethod.POST)
+    public String forgetPassword(IUsers user,HttpServletRequest request) {
+
         List<IUsers> users = usersService.
                 findUserByStudentIdAndUsername(user);
-        for (IUsers u :
-                users) {
-            System.out.println("forgetPsw"+u.toString());
-        }
         if (users.isEmpty()) {
-            map.put("error", "未找到该学号或用户名");
             return "forgetPsw";
+
         }else{
-            map.put("success","验证成功");
-            //session.setAttribute("user",users.get(0));
+            HttpSession session = request.getSession(true);
+            session.setAttribute("checked",users.get(0));
         }
-        
         return "findpassword";
     }
 
     /**
      * 修改密码
-     *
+     * user：{student_id = 0,username = null,password = 试图修改的密码}
+     * session:携带了/forgetPsw里存储的验证后的IUsers实例，带有student_id,username,password
+     * 可以结合联系此两个，new一个新的IUsers实例
      * @param user
-     * @param map
-     * @return
+     * @param
+     * @return                                               e
      */
 
-    @RequestMapping("/findpassword")
-    public String findPassword(@Valid IUsers user , Map<String, Object> map) {
-        System.out.println("@valid1"+user.toString());
-        boolean reset = usersService.resetPassword(user);
+    @RequestMapping(value = "/findpassword",method = RequestMethod.POST)
+    public String findPassword(IUsers user ,ModelAndView mav,HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        IUsers valid_user = (IUsers)session.getAttribute("checked");
+        if(user == null || request.getSession().isNew()){
+            return "forgetPsw";
+        }
+        IUsers reset_user = new IUsers();
+        reset_user.setStudent_id(valid_user.getStudent_id());
+        reset_user.setUsername(valid_user.getUsername());
+        reset_user.setPassword(user.getPassword());
+
+        System.out.println("mav:"   +mav.getViewName());
+        boolean reset = usersService.resetPassword(reset_user);
         if (reset) {
-            map.put("success", "修改成功");
+            session.invalidate();
             return "success";
         }
-        map.put("error", "未知错误");
         return "forgetPsw";
     }
 
@@ -155,4 +154,12 @@ public class UsersController {
     public String success() {
         return "success";
     }
+
+    @RequestMapping("/find_error")
+    public String findError() {
+        return "find_error";
+    }
+    
+
+
 }

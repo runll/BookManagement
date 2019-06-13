@@ -40,7 +40,7 @@
                 <div class="bottom">
                     <ul>
                         <li><a href="${pageContext.request.contextPath }/register.jsp">注册</a></li><b></b>
-                        <li><a href="${pageContext.request.contextPath }/forgetPsw">忘记密码</a></li>
+                        <li><a href="${pageContext.request.contextPath }/forgetPsw.jsp">忘记密码</a></li>
                     </ul>
                 </div>
                 <div>
